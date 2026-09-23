@@ -365,8 +365,8 @@ export default function App() {
             </span>
 
             <p>
-              O usuário deve dizer à Ikai o que quer
-              consumir — e o sistema deve respeitar
+              O usuário deve dizer a o Ikai o que quer
+              consumir e o sistema deve respeitar
               essa decisão.
             </p>
 
