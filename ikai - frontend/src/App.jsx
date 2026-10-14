@@ -109,8 +109,7 @@ const features = [
     n: "01",
     icon: <Clock3 />,
     title: "Sessões conscientes",
-    text: "Antes de entrar, você escolhe o que pretende fazer e define os limites da sessão. Quando ela termina, acabou.",
-    large: true,
+    text: "Antes de entrar, você escolhe o que pretende fazer e define os limites da sessão. Quando ela termina, acabou."
   },
   {
     n: "02",
