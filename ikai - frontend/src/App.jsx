@@ -7,6 +7,9 @@ import {
   Check,
   Clock3,
   Download,
+  Hourglass,
+  HourglassIcon,
+  LucideHourglass,
   Search,
   ShieldCheck,
   Smartphone,
@@ -278,43 +281,81 @@ export default function App() {
             </h2>
           </div>
 
-          <div className="feature-grid">
-            {features.map((feature) => (
-              <article
-                className={`feature-card ${
-                  feature.large ? "large" : ""
-                }`}
-                key={feature.n}
-              >
-                <div className="feature-number">
-                  {feature.n}
-                </div>
+<div className="feature-grid">
+  {features.map((feature) => (
+    <article
+      className={`feature-card ${
+        feature.large ? "large" : ""
+      }`}
+      key={feature.n}
+    >
+      <div className="feature-number">
+        {feature.n}
+      </div>
 
-                <div className="icon">
-                  {feature.icon}
-                </div>
+      <div className="icon">
+        {feature.icon}
+      </div>
 
-                <h3>
-                  {feature.title}
-                </h3>
+      <h3>
+        {feature.title}
+      </h3>
 
-                <p>
-                  {feature.text}
-                </p>
+      <p>
+        {feature.text}
+      </p>
 
-                {feature.large && (
-                  <div className="mini-ui">
-                    <span>Objetivo</span>
-                    <b>Estudar</b>
+      {feature.large && (
+        <div className="mini-ui">
+          <span>Objetivo</span>
+          <b>Estudar</b>
 
-                    <span>Limite</span>
-                    <b>20 min</b>
-                  </div>
-                )}
-              </article>
-            ))}
-          </div>
-        </section>
+          <span>Limite</span>
+          <b>20 min</b>
+        </div>
+      )}
+    </article>
+  ))}
+
+  {/* Card 05 - Privacidade */}
+  <article className="feature-card" key="05">
+    <div className="feature-number">
+      05
+    </div>
+
+    <div className="icon">
+      <ShieldCheck size={24} />
+    </div>
+
+    <h3>
+      Sua privacidade importa
+    </h3>
+
+    <p>
+      Tenha mais controle sobre suas informações e suas escolhas.
+    </p>
+  </article>
+
+  {/* Card 06 - Tempo com propósito */}
+  <article className="feature-card" key="06">
+    <div className="feature-number">
+      06
+    </div>
+
+    <div className="icon">
+      <HourglassIcon size={24} />
+    </div>
+
+    <h3>
+      Tempo com propósito
+    </h3>
+
+    <p>
+      Defina limites e transforme o tempo online em tempo intencional.
+    </p>
+  </article>
+</div>
+</section>
 
         {/* PRINCÍPIOS */}
         <section
