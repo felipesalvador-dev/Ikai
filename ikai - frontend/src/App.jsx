@@ -24,7 +24,7 @@ function Brand() {
     <a className="brand" href="#inicio">
       <img
         className="brand-icon"
-        src="./public/ikai-icon.jpg"
+        src={`${import.meta.env.BASE_URL}ikai-icon.jpg`}
         alt="Ikai"
       />
       <span>Ikai</span>

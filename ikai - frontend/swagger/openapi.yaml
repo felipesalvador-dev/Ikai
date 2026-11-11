@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: Ikai – Sistema Web · Integração com EmailJS
+  version: 1.0.0
+  description: |
+    Documentação do único contrato HTTP utilizado pelo Sistema Web do Ikai.
+
+    **O site não possui API própria nem backend.** O formulário “Quero acompanhar”
+    (`src/App.jsx`, função `submit()`) usa o SDK `@emailjs/browser` 4.4.1, que envia
+    o formulário à API REST do serviço externo **EmailJS**. Este documento descreve
+    essa requisição exatamente como o SDK a monta (`emailjs.sendForm`), com base no
+    código do SDK e na documentação oficial do EmailJS.
+
+    ### Fluxo no site
+    1. O navegador valida o campo `user_email` (`type="email"`, `required`).
+    2. `submit()` ativa o estado de envio e chama
+       `emailjs.sendForm(service_id, template_id, form, { publicKey })`.
+    3. O SDK acrescenta `lib_version`, `service_id`, `template_id` e `user_id`
+       aos campos do formulário e faz `POST` *multipart/form-data* para este endpoint.
+    4. Resposta `2xx` → mensagem “Cadastro realizado! …” e o formulário é limpo.
+       Qualquer outra resposta → mensagem `Erro {status}: {text}`.
+
+    ### Erros gerados pelo próprio SDK (sem chamada HTTP)
+    O SDK pode rejeitar o envio antes da requisição, com o mesmo formato
+    `{ status, text }`: `403 Forbidden` (lista de bloqueio), `429 Too Many Requests`
+    (limite local) e `451 Unavailable For Headless Browser`. Essas opções
+    (`blockList`, `limitRate`, `blockHeadless`) **não estão configuradas** no site.
+    Falhas de rede resultam em `status: 0`, `text: "Network Error"`.
+
+    ### Limites do serviço
+    O EmailJS informa limite de **1 requisição por segundo** neste endpoint.
+  contact:
+    name: Equipe Ikai – SENAI “Nadir Dias de Figueiredo”
+  x-implementation-status: implementado
+servers:
+  - url: https://api.emailjs.com
+    description: API pública do EmailJS (serviço externo)
+tags:
+  - name: Formulário de interesse
+    description: Captação de e-mails de interessados no lançamento do aplicativo.
+externalDocs:
+  description: Documentação oficial do endpoint /send-form
+  url: https://www.emailjs.com/docs/rest-api/send-form/
+paths:
+  /api/v1.0/email/send-form:
+    post:
+      tags:
+        - Formulário de interesse
+      operationId: enviarInteresseLancamento
+      security: []
+      summary: Envia o e-mail do interessado para a caixa da equipe
+      description: |
+        Requisição feita por `emailjs.sendForm()` quando o visitante envia o
+        formulário da seção **Download**. O EmailJS preenche o template
+        `template_bl9nq7e` com os campos recebidos (incluindo `user_email`) e entrega
+        a mensagem pelo serviço de e-mail `service_vuz78oo`.
+
+        Não há cabeçalho de autenticação: a identificação da conta é feita pela
+        chave pública (`user_id`), que o EmailJS define como pública por design.
+        A chave privada (`accessToken`) **não** é utilizada pelo site.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EnvioFormulario'
+            encoding:
+              user_email:
+                contentType: text/plain
+            examples:
+              envioDoSite:
+                summary: Requisição gerada pelo site
+                value:
+                  user_email: pessoa@exemplo.com
+                  lib_version: 4.4.1
+                  service_id: service_vuz78oo
+                  template_id: template_bl9nq7e
+                  user_id: qhXYuMJGY2jg8q5h4
+      responses:
+        '200':
+          description: E-mail aceito e enviado. O site exibe “Cadastro realizado! Você ficará por dentro das novidades da Ikai.” e limpa o formulário.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: OK
+        '422':
+          description: "O serviço não conseguiu processar o envio (exemplo da documentação oficial). O site exibe `Erro 422: {texto}`."
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: The recipients address is corrupted
+        4XX:
+          description: "Demais erros de requisição retornados pelo EmailJS (por exemplo, parâmetros inválidos ou limite excedido). O corpo é um texto explicativo exibido ao visitante como `Erro {status}: {texto}`."
+          content:
+            text/plain:
+              schema:
+                type: string
+        5XX:
+          description: Falha interna do serviço externo. Tratada pelo site da mesma forma que os demais erros.
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  schemas:
+    EnvioFormulario:
+      type: object
+      description: Campos enviados no corpo multipart. `user_email` vem do formulário do site; os demais são acrescentados pelo SDK.
+      required:
+        - user_email
+        - service_id
+        - template_id
+        - user_id
+      properties:
+        user_email:
+          type: string
+          format: email
+          maxLength: 255
+          description: E-mail digitado pelo visitante (campo `name="user_email"`). Validado no navegador antes do envio.
+          example: pessoa@exemplo.com
+        lib_version:
+          type: string
+          description: Versão do SDK, adicionada automaticamente.
+          example: 4.4.1
+        service_id:
+          type: string
+          description: Identificador do serviço de e-mail configurado no painel do EmailJS.
+          example: service_vuz78oo
+        template_id:
+          type: string
+          description: Identificador do template de e-mail.
+          example: template_bl9nq7e
+        user_id:
+          type: string
+          description: Chave pública (Public Key) da conta EmailJS.
+          example: qhXYuMJGY2jg8q5h4
+        accessToken:
+          type: string
+          description: Chave privada da conta. Opcional na API e **não utilizada** pelo site.
