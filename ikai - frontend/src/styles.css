@@ -493,18 +493,6 @@ em {
   color: white;
 }
 
-.feature-number {
-  position: absolute;
-  top: 25px;
-  right: 28px;
-  font-size: 10px;
-  color: var(--muted-light);
-}
-
-.feature-card.large .feature-number {
-  color: #d1bdb1;
-}
-
 .icon {
   font-size: 27px;
   margin-top: 7px;

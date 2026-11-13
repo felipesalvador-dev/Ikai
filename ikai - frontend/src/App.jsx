@@ -109,25 +109,21 @@ function PhonePreview() {
 
 const features = [
   {
-    n: "01",
     icon: <Clock3 />,
     title: "Sessões conscientes",
     text: "Antes de entrar, você escolhe o que pretende fazer e define os limites da sessão. Quando ela termina, acabou."
   },
   {
-    n: "02",
     icon: <Search />,
     title: "Personalização manual",
     text: "Você cria seus próprios modos com filtros de área, assunto, idioma e formato.",
   },
   {
-    n: "03",
     icon: <Zap />,
     title: "Sem feed infinito",
     text: "Uma quantidade finita de conteúdos. Sem autoplay e sem avançar automaticamente.",
   },
   {
-    n: "04",
     icon: <Sparkles />,
     title: "Gamificação individual",
     text: "Conquistas, badges, streaks e side quests sem rankings ou comparação social.",
@@ -287,12 +283,8 @@ export default function App() {
       className={`feature-card ${
         feature.large ? "large" : ""
       }`}
-      key={feature.n}
+      key={feature.title}
     >
-      <div className="feature-number">
-        {feature.n}
-      </div>
-
       <div className="icon">
         {feature.icon}
       </div>
@@ -319,10 +311,6 @@ export default function App() {
 
   {/* Card 05 - Privacidade */}
   <article className="feature-card" key="05">
-    <div className="feature-number">
-      05
-    </div>
-
     <div className="icon">
       <ShieldCheck size={24} />
     </div>
@@ -338,10 +326,6 @@ export default function App() {
 
   {/* Card 06 - Tempo com propósito */}
   <article className="feature-card" key="06">
-    <div className="feature-number">
-      06
-    </div>
-
     <div className="icon">
       <HourglassIcon size={24} />
     </div>
